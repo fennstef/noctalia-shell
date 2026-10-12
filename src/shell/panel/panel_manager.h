@@ -307,7 +307,8 @@ private:
   wl_callback* m_captureCloseFrame = nullptr;
   std::function<void()> m_afterCaptureClose;
   std::string m_attachedBarPosition; // "top" / "bottom" / "left" / "right" while attached, empty otherwise
-  std::string m_sourceBarName;       // name of the bar that opened the current panel
+  AttachedEdgeAlign m_attachedAlignEdge = AttachedEdgeAlign::None;
+  std::string m_sourceBarName; // name of the bar that opened the current panel
   std::optional<AttachedPanelGeometry> m_attachedPanelGeometry;
   bool m_pointerInside = false;
   bool m_inTransition = false;

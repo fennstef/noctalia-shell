@@ -91,9 +91,10 @@ control_center_placement = "attached" # attached | floating
 wallpaper_placement      = "attached" # attached | floating
 session_placement        = "attached" # attached | floating
 polkit_placement         = "floating" # attached | floating
-launcher_position        = "center"   # auto | center | top_left | … (floating only)
-clipboard_position       = "center"   # auto | center | top_left | … (floating only)
-polkit_position          = "center"   # auto | center | top_left | … (floating only)
+launcher_position        = "center"   # auto | center | top_left | …
+clipboard_position       = "center"   # auto | center | top_left | …
+control_center_position  = "auto"     # auto | center | top_left | …
+polkit_position          = "center"   # auto | center | top_left | …
 floating_offset          = 8           # px gap between a floating panel and the bar edge
 open_near_click_control_center = false  # attached/floating: follow the bar click instead of bar-center
 open_near_click_launcher       = false  # attached/floating: follow the bar click instead of bar-center
@@ -221,6 +222,7 @@ pipe_command         = ""                          # annotator/uploader, e.g. "s
 ```
 
 Notes:
+
 
 - `avatar_path` controls the avatar Noctalia shows in shell UI such as the Control Center Home tab. When AccountsService is reachable, Noctalia also updates your user's `IconFile` there so other consumers such as Noctalia Greeter can reuse the same avatar. If **accountsservice** is missing or disabled, the shell still uses `avatar_path`, but login greeters that depend on AccountsService will not see that image.
 
