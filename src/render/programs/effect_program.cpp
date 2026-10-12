@@ -1,6 +1,7 @@
 #include "render/programs/effect_program.h"
 
 #include <array>
+#include <optional>
 #include <stdexcept>
 #include <string>
 
@@ -481,6 +482,29 @@ void main() {
 }
 )";
 
+  // Maps an effect type to its slot in m_programs (initialized in ensureInitialized()
+  // as Sun, Snow, Rain, Cloud, Stars). Fog has no slot of its own — callers remap it to
+  // Cloud before calling this. `effectType - 1` doesn't hold for Stars once Fog takes a
+  // gap in the enum without a matching program slot, so this spells the mapping out.
+  [[nodiscard]] std::optional<std::size_t> programIndex(EffectType type) {
+    switch (type) {
+    case EffectType::Sun:
+      return 0;
+    case EffectType::Snow:
+      return 1;
+    case EffectType::Rain:
+      return 2;
+    case EffectType::Cloud:
+      return 3;
+    case EffectType::Stars:
+      return 4;
+    case EffectType::None:
+    case EffectType::Fog:
+      return std::nullopt;
+    }
+    return std::nullopt;
+  }
+
 } // namespace
 
 void EffectProgram::ensureInitialized() {
@@ -542,12 +566,12 @@ void EffectProgram::draw(
   // Fog reuses the Cloud shader with alternative=1
   const bool isFog = style.type == EffectType::Fog;
   const auto effectType = isFog ? EffectType::Cloud : style.type;
-  auto idx = static_cast<std::size_t>(effectType) - 1;
-  if (idx >= kEffectCount || !m_programs[idx].program.isValid()) {
+  const auto idx = programIndex(effectType);
+  if (!idx.has_value() || !m_programs[*idx].program.isValid()) {
     return;
   }
 
-  const auto& pd = m_programs[idx];
+  const auto& pd = m_programs[*idx];
 
   static constexpr float kQuad[] = {
       0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 0.0F, 1.0F, 1.0F,
