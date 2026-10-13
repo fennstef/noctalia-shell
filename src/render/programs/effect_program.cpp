@@ -482,10 +482,7 @@ void main() {
 }
 )";
 
-  // Maps an effect type to its slot in m_programs (initialized in ensureInitialized()
-  // as Sun, Snow, Rain, Cloud, Stars). Fog has no slot of its own — callers remap it to
-  // Cloud before calling this. `effectType - 1` doesn't hold for Stars once Fog takes a
-  // gap in the enum without a matching program slot, so this spells the mapping out.
+  // Slot in m_programs. Fog has no slot of its own; draw() renders it with the Cloud program.
   [[nodiscard]] std::optional<std::size_t> programIndex(EffectType type) {
     switch (type) {
     case EffectType::Sun:
@@ -512,11 +509,11 @@ void EffectProgram::ensureInitialized() {
     return;
   }
 
-  initProgram(0, kSunFragment);
-  initProgram(1, kSnowFragment);
-  initProgram(2, kRainFragment);
-  initProgram(3, kCloudFragment);
-  initProgram(4, kStarsFragment);
+  initProgram(EffectType::Sun, kSunFragment);
+  initProgram(EffectType::Snow, kSnowFragment);
+  initProgram(EffectType::Rain, kRainFragment);
+  initProgram(EffectType::Cloud, kCloudFragment);
+  initProgram(EffectType::Stars, kStarsFragment);
 }
 
 void EffectProgram::destroy() {
@@ -531,10 +528,10 @@ void EffectProgram::abandon() noexcept {
   }
 }
 
-void EffectProgram::initProgram(std::size_t index, const char* fragSource) {
+void EffectProgram::initProgram(EffectType type, const char* fragSource) {
   std::string fullFrag = std::string(kCommonFragment) + fragSource;
 
-  auto& pd = m_programs[index];
+  auto& pd = m_programs[programIndex(type).value()];
   pd.program.create(kVertexShader, fullFrag.c_str());
 
   auto id = pd.program.id();
