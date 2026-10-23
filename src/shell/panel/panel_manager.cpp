@@ -1068,7 +1068,7 @@ void PanelManager::openPanel(const std::string& panelId, PanelOpenRequest reques
     std::int32_t visualY = 0;
     const bool useAnchorForAttached =
         request.hasAnchorPosition && openNearClickEnabled(m_activePanel, m_activePanelId, m_config);
-    const auto attachedAlign = shell::attachedPositionAlign(panelPosition, barIsVertical);
+    const auto attachedAlign = shell::attachedPositionAlign(panelPosition, barPosition);
     const AttachedEdgeAlign resolvedAlignEdge = useAnchorForAttached ? AttachedEdgeAlign::None
         : attachedAlign.end                                          ? AttachedEdgeAlign::End
         : attachedAlign.start                                        ? AttachedEdgeAlign::Start
@@ -1083,7 +1083,7 @@ void PanelManager::openPanel(const std::string& panelId, PanelOpenRequest reques
       // click anchor's minY/maxY clamp, which leaves room for the bar-corner/panel-corner
       // nesting inset so a panel dragged near the edge doesn't collide with it. The
       // away-side corner at that end goes square (see edgeAlignedRadii), so there's no
-      // rounding there needing bleed room — it genuinely butts against the edge.
+      // rounding there needing bleed room; it genuinely butts against the edge.
       const auto flushStartY = std::min(minY, barTop);
       const auto flushEndY = std::max(maxY, barBottom - static_cast<std::int32_t>(panelHeight));
       if (useAnchorForAttached) {
@@ -1106,7 +1106,7 @@ void PanelManager::openPanel(const std::string& panelId, PanelOpenRequest reques
       // anchor's minX/maxX clamp, which leaves room for the bar-corner/panel-corner
       // nesting inset so a panel dragged near the edge doesn't collide with it. The
       // away-side corner at that end goes square (see edgeAlignedRadii), so there's no
-      // rounding there needing bleed room — it genuinely butts against the edge.
+      // rounding there needing bleed room; it genuinely butts against the edge.
       const auto flushStartX = std::min(minX, barLeft);
       const auto flushEndX = std::max(maxX, barRight - static_cast<std::int32_t>(panelWidth));
       if (useAnchorForAttached) {

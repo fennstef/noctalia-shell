@@ -47,27 +47,28 @@ namespace shell {
     return out;
   }
 
-  // Resolves the bar-relative start/end alignment an *attached* panel should take
-  // from the same `<panel>_position` vocabulary, restricted to the component that
-  // matches the bar's own axis (left/right for a horizontal bar, top/bottom for a
-  // vertical bar). The perpendicular component and "auto"/"center" carry no
-  // alignment preference; the caller keeps its existing bar-centered default then.
+  // Resolves the start/end alignment along the bar for an *attached* panel from the
+  // same `<panel>_position` vocabulary, read literally: the position applies only
+  // when it lies on the bar's own edge (e.g. bottom_left/bottom_right for a bottom
+  // bar, top_right/bottom_right for a right bar). Every other token, including the
+  // edge-center tokens, "auto", and "center", keeps the bar-centered default.
   struct AttachedPositionAlign {
     bool start = false;
     bool end = false;
   };
 
-  [[nodiscard]] inline AttachedPositionAlign attachedPositionAlign(std::string_view position, bool barIsVertical) {
-    if (barIsVertical) {
-      return {
-          .start = position == "top_left" || position == "top_center" || position == "top_right",
-          .end = position == "bottom_left" || position == "bottom_center" || position == "bottom_right",
-      };
+  [[nodiscard]] inline AttachedPositionAlign
+  attachedPositionAlign(std::string_view position, std::string_view barPosition) {
+    if (barPosition == "bottom") {
+      return {.start = position == "bottom_left", .end = position == "bottom_right"};
     }
-    return {
-        .start = position == "top_left" || position == "center_left" || position == "bottom_left",
-        .end = position == "top_right" || position == "center_right" || position == "bottom_right",
-    };
+    if (barPosition == "left") {
+      return {.start = position == "top_left", .end = position == "bottom_left"};
+    }
+    if (barPosition == "right") {
+      return {.start = position == "top_right", .end = position == "bottom_right"};
+    }
+    return {.start = position == "top_left", .end = position == "top_right"};
   }
 
 } // namespace shell
