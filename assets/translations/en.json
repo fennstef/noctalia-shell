@@ -2874,27 +2874,27 @@
           "label": "Placement"
         },
         "position-clipboard": {
-          "description": "Where the clipboard floats on screen; Follow Bar keeps it near the bar",
+          "description": "Floating: where the clipboard sits on screen; Follow Bar keeps it near the bar. Attached: a position along the bar's edge aligns it to that end of the bar",
           "label": "Position"
         },
         "position-control-center": {
-          "description": "Where Control Center floats on screen; Follow Bar keeps it near the bar",
+          "description": "Floating: where Control Center sits on screen; Follow Bar keeps it near the bar. Attached: a position along the bar's edge aligns it to that end of the bar",
           "label": "Position"
         },
         "position-launcher": {
-          "description": "Where the launcher floats on screen; Follow Bar keeps it near the bar",
+          "description": "Floating: where the launcher sits on screen; Follow Bar keeps it near the bar. Attached: a position along the bar's edge aligns it to that end of the bar",
           "label": "Position"
         },
         "position-polkit": {
-          "description": "Where the polkit prompt floats on screen; Follow Bar keeps it near the bar",
+          "description": "Floating: where the polkit prompt sits on screen; Follow Bar keeps it near the bar. Attached: a position along the bar's edge aligns it to that end of the bar",
           "label": "Position"
         },
         "position-session": {
-          "description": "Where the session panel floats on screen; Follow Bar keeps it near the bar",
+          "description": "Floating: where the session panel sits on screen; Follow Bar keeps it near the bar. Attached: a position along the bar's edge aligns it to that end of the bar",
           "label": "Position"
         },
         "position-wallpaper": {
-          "description": "Where the wallpaper picker floats on screen; Follow Bar keeps it near the bar",
+          "description": "Floating: where the wallpaper picker sits on screen; Follow Bar keeps it near the bar. Attached: a position along the bar's edge aligns it to that end of the bar",
           "label": "Position"
         },
         "shadow": {

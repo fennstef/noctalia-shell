@@ -1233,12 +1233,13 @@ namespace settings {
         },
         "floating detached panel gap offset distance bar"
     ));
-    // Floating-position select for a panel, shown only when its placement is Floating.
+    // Position select for a panel. Floating pins it on screen; attached honors only
+    // positions on the bar's edge (see shell::attachedPositionAlign).
     const auto panelPositionEntry = [&](SettingsSection section, std::string group, std::string_view panelKey,
-                                        std::string_view labelKey, std::string_view descKey, const std::string& current,
-                                        PanelPlacement ShellConfig::PanelConfig::* placement) {
-      auto e = makeEntry(
-          section, group, tr(labelKey), tr(descKey),
+                                        std::string_view labelKey, std::string_view descKey,
+                                        const std::string& current) {
+      return makeEntry(
+          section, std::move(group), tr(labelKey), tr(descKey),
           {std::string("shell"), std::string("panel"), std::string(panelKey) + "_position"},
           plainSelect(
               {{"auto", "settings.options.panel-position.auto"},
@@ -1253,10 +1254,8 @@ namespace settings {
                {"bottom_right", "settings.options.screen-position.bottom-right"}},
               current
           ),
-          "panel position screen anchor corner edge floating bottom right"
+          "panel position screen anchor corner edge floating attached align bottom right"
       );
-      e.visibleWhen = [placement](const Config& c) { return c.shell.panel.*placement == PanelPlacement::Floating; };
-      return e;
     };
 
     const auto panelBarAlignmentEntry = [](SettingsSection section, std::string group, std::string_view panelKey,
@@ -1291,8 +1290,7 @@ namespace settings {
     ));
     entries.push_back(panelPositionEntry(
         SettingsSection::Launcher, "launcher", "launcher", "settings.schema.panels.position-launcher.label",
-        "settings.schema.panels.position-launcher.description", cfg.shell.panel.launcherPosition,
-        &ShellConfig::PanelConfig::launcherPlacement
+        "settings.schema.panels.position-launcher.description", cfg.shell.panel.launcherPosition
     ));
     entries.push_back(panelBarAlignmentEntry(
         SettingsSection::Launcher, "launcher", "launcher", "settings.schema.panels.open-near-click-launcher.label",
@@ -1487,8 +1485,7 @@ namespace settings {
     ));
     entries.push_back(panelPositionEntry(
         SettingsSection::Panels, "clipboard", "clipboard", "settings.schema.panels.position-clipboard.label",
-        "settings.schema.panels.position-clipboard.description", cfg.shell.panel.clipboardPosition,
-        &ShellConfig::PanelConfig::clipboardPlacement
+        "settings.schema.panels.position-clipboard.description", cfg.shell.panel.clipboardPosition
     ));
     entries.push_back(panelBarAlignmentEntry(
         SettingsSection::Panels, "clipboard", "clipboard", "settings.schema.panels.open-near-click-clipboard.label",
@@ -1503,8 +1500,7 @@ namespace settings {
     ));
     entries.push_back(panelPositionEntry(
         SettingsSection::Panels, "polkit", "polkit", "settings.schema.panels.position-polkit.label",
-        "settings.schema.panels.position-polkit.description", cfg.shell.panel.polkitPosition,
-        &ShellConfig::PanelConfig::polkitPlacement
+        "settings.schema.panels.position-polkit.description", cfg.shell.panel.polkitPosition
     ));
     entries.push_back(makeEntry(
         SettingsSection::Panels, "wallpaper", tr("settings.schema.panels.wallpaper-show-names.label"),
@@ -1519,8 +1515,7 @@ namespace settings {
     ));
     entries.push_back(panelPositionEntry(
         SettingsSection::Panels, "wallpaper", "wallpaper", "settings.schema.panels.position-wallpaper.label",
-        "settings.schema.panels.position-wallpaper.description", cfg.shell.panel.wallpaperPosition,
-        &ShellConfig::PanelConfig::wallpaperPlacement
+        "settings.schema.panels.position-wallpaper.description", cfg.shell.panel.wallpaperPosition
     ));
     entries.push_back(panelBarAlignmentEntry(
         SettingsSection::Panels, "wallpaper", "wallpaper", "settings.schema.panels.open-near-click-wallpaper.label",
@@ -1539,8 +1534,7 @@ namespace settings {
     entries.push_back(panelPositionEntry(
         SettingsSection::ControlCenter, "layout", "control_center",
         "settings.schema.panels.position-control-center.label",
-        "settings.schema.panels.position-control-center.description", cfg.shell.panel.controlCenterPosition,
-        &ShellConfig::PanelConfig::controlCenterPlacement
+        "settings.schema.panels.position-control-center.description", cfg.shell.panel.controlCenterPosition
     ));
     entries.push_back(panelBarAlignmentEntry(
         SettingsSection::ControlCenter, "layout", "control_center",
@@ -3225,8 +3219,7 @@ namespace settings {
     ));
     entries.push_back(panelPositionEntry(
         SettingsSection::Power, "session-panel", "session", "settings.schema.panels.position-session.label",
-        "settings.schema.panels.position-session.description", cfg.shell.panel.sessionPosition,
-        &ShellConfig::PanelConfig::sessionPlacement
+        "settings.schema.panels.position-session.description", cfg.shell.panel.sessionPosition
     ));
     entries.push_back(panelBarAlignmentEntry(
         SettingsSection::Power, "session-panel", "session", "settings.schema.panels.open-near-click-session.label",

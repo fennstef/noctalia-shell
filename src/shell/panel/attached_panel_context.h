@@ -12,15 +12,6 @@ enum class AttachedRevealDirection : std::uint8_t {
   Left,
 };
 
-// Which end of the bar an attached panel is pinned to via its `*_position`
-// (only positions lying on the bar's edge apply). None covers the bar-centered
-// and click-anchored cases.
-enum class AttachedEdgeAlign : std::uint8_t {
-  None,
-  Start,
-  End,
-};
-
 struct AttachedPanelGeometry {
   float x = 0.0F;
   float y = 0.0F;
@@ -69,45 +60,6 @@ namespace attached_panel {
         .br = CornerShape::Convex,
         .bl = CornerShape::Convex,
     };
-  }
-
-  // The away-side corner radius goes square (0) at whichever end of the bar's own
-  // axis the panel is edge-aligned to via `*_position`; it butts flush against the
-  // screen edge there instead of rounding into open space. Only that one away-side
-  // corner changes; the bar-side corner on the same end keeps its normal concave
-  // nesting into the bar, untouched.
-  [[nodiscard]] inline Radii edgeAlignedRadii(std::string_view barPosition, AttachedEdgeAlign alignEdge, float radius) {
-    Radii radii{radius, radius, radius, radius};
-    if (alignEdge == AttachedEdgeAlign::None) {
-      return radii;
-    }
-    if (barPosition == "bottom") {
-      if (alignEdge == AttachedEdgeAlign::Start) {
-        radii.tl = 0.0F;
-      } else {
-        radii.tr = 0.0F;
-      }
-    } else if (barPosition == "left") {
-      if (alignEdge == AttachedEdgeAlign::Start) {
-        radii.tr = 0.0F;
-      } else {
-        radii.br = 0.0F;
-      }
-    } else if (barPosition == "right") {
-      if (alignEdge == AttachedEdgeAlign::Start) {
-        radii.tl = 0.0F;
-      } else {
-        radii.bl = 0.0F;
-      }
-    } else {
-      // top (default)
-      if (alignEdge == AttachedEdgeAlign::Start) {
-        radii.bl = 0.0F;
-      } else {
-        radii.br = 0.0F;
-      }
-    }
-    return radii;
   }
 
   [[nodiscard]] inline RectInsets logicalInset(std::string_view barPosition, float radius) {
