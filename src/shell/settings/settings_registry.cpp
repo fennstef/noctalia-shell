@@ -1258,21 +1258,16 @@ namespace settings {
       );
     };
 
-    const auto panelBarAlignmentEntry = [](SettingsSection section, std::string group, std::string_view panelKey,
-                                           std::string_view labelKey, std::string_view descKey, bool nearTrigger,
-                                           PanelPlacement ShellConfig::PanelConfig::* placement,
-                                           std::string ShellConfig::PanelConfig::* position) {
-      auto alignment = plainSelect(
-          {{"false", "settings.options.panel-bar-alignment.centered"},
-           {"true", "settings.options.panel-bar-alignment.near-trigger"}},
-          nearTrigger ? "true" : "false"
-      );
-      alignment.segmented = true;
-      alignment.valueType = SelectValueType::Boolean;
+    // Click override: when on, a click on the panel's bar widget opens it near the widget
+    // instead of at its Position.
+    const auto panelOpenNearClickEntry = [](SettingsSection section, std::string group, std::string_view panelKey,
+                                            std::string_view labelKey, std::string_view descKey, bool nearClick,
+                                            PanelPlacement ShellConfig::PanelConfig::* placement,
+                                            std::string ShellConfig::PanelConfig::* position) {
       auto e = makeEntry(
           section, std::move(group), tr(labelKey), tr(descKey),
-          {"shell", "panel", std::string("open_near_click_") + std::string(panelKey)}, std::move(alignment),
-          "along bar centered near trigger widget click position anchor"
+          {"shell", "panel", std::string("open_near_click_") + std::string(panelKey)}, ToggleSetting{nearClick},
+          "open near click trigger widget along bar position anchor"
       );
       e.visibleWhen = [placement, position](const Config& c) {
         const auto& panel = c.shell.panel;
@@ -1292,7 +1287,7 @@ namespace settings {
         SettingsSection::Launcher, "launcher", "launcher", "settings.schema.panels.position-launcher.label",
         "settings.schema.panels.position-launcher.description", cfg.shell.panel.launcherPosition
     ));
-    entries.push_back(panelBarAlignmentEntry(
+    entries.push_back(panelOpenNearClickEntry(
         SettingsSection::Launcher, "launcher", "launcher", "settings.schema.panels.open-near-click-launcher.label",
         "settings.schema.panels.open-near-click-launcher.description", cfg.shell.panel.openNearClickLauncher,
         &ShellConfig::PanelConfig::launcherPlacement, &ShellConfig::PanelConfig::launcherPosition
@@ -1487,7 +1482,7 @@ namespace settings {
         SettingsSection::Panels, "clipboard", "clipboard", "settings.schema.panels.position-clipboard.label",
         "settings.schema.panels.position-clipboard.description", cfg.shell.panel.clipboardPosition
     ));
-    entries.push_back(panelBarAlignmentEntry(
+    entries.push_back(panelOpenNearClickEntry(
         SettingsSection::Panels, "clipboard", "clipboard", "settings.schema.panels.open-near-click-clipboard.label",
         "settings.schema.panels.open-near-click-clipboard.description", cfg.shell.panel.openNearClickClipboard,
         &ShellConfig::PanelConfig::clipboardPlacement, &ShellConfig::PanelConfig::clipboardPosition
@@ -1517,7 +1512,7 @@ namespace settings {
         SettingsSection::Panels, "wallpaper", "wallpaper", "settings.schema.panels.position-wallpaper.label",
         "settings.schema.panels.position-wallpaper.description", cfg.shell.panel.wallpaperPosition
     ));
-    entries.push_back(panelBarAlignmentEntry(
+    entries.push_back(panelOpenNearClickEntry(
         SettingsSection::Panels, "wallpaper", "wallpaper", "settings.schema.panels.open-near-click-wallpaper.label",
         "settings.schema.panels.open-near-click-wallpaper.description", cfg.shell.panel.openNearClickWallpaper,
         &ShellConfig::PanelConfig::wallpaperPlacement, &ShellConfig::PanelConfig::wallpaperPosition
@@ -1536,7 +1531,7 @@ namespace settings {
         "settings.schema.panels.position-control-center.label",
         "settings.schema.panels.position-control-center.description", cfg.shell.panel.controlCenterPosition
     ));
-    entries.push_back(panelBarAlignmentEntry(
+    entries.push_back(panelOpenNearClickEntry(
         SettingsSection::ControlCenter, "layout", "control_center",
         "settings.schema.panels.open-near-click-control-center.label",
         "settings.schema.panels.open-near-click-control-center.description", cfg.shell.panel.openNearClickControlCenter,
@@ -3221,7 +3216,7 @@ namespace settings {
         SettingsSection::Power, "session-panel", "session", "settings.schema.panels.position-session.label",
         "settings.schema.panels.position-session.description", cfg.shell.panel.sessionPosition
     ));
-    entries.push_back(panelBarAlignmentEntry(
+    entries.push_back(panelOpenNearClickEntry(
         SettingsSection::Power, "session-panel", "session", "settings.schema.panels.open-near-click-session.label",
         "settings.schema.panels.open-near-click-session.description", cfg.shell.panel.openNearClickSession,
         &ShellConfig::PanelConfig::sessionPlacement, &ShellConfig::PanelConfig::sessionPosition
